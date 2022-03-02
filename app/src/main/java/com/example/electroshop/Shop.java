@@ -134,13 +134,18 @@ public class Shop extends AppCompatActivity implements View.OnClickListener{
                 String priceKek = cursorUpdater.getString(priceIndex);
                 ChangeSum(Integer.parseInt(priceKek));
                 int prodIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODID);
+                boolean found = false;
                 for (int[] arr : prodInfo) {
                     for(int elem : arr){
                         if(elem == prodIndex){
                             arr[1] = arr[1]+1;
+                            found = true;
                             break;
                         }
                     }
+                }
+                if(found == false){
+                    prodInfo[]
                 }
                 break;
         }
