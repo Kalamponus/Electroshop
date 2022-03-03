@@ -40,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_PRODUCTS + "(" + KEY_PRODID
                 + " integer primary key," + KEY_PRODNAME + " text," + KEY_PRODPRICE + " float," + KEY_PRODDESCR + " text" + ")");
         db.execSQL("create table " + TABLE_ORDERS + "(" + KEY_ORDERID
-                + " integer primary key," + KEY_ADDREESS + " text," + KEY_CUSTOMERNAME + " text," + KEY_PHONE + " integer," + KEY_COST + " float" + ")");
+                 + " text," + KEY_CUSTOMERNAME + " integer primary key," + KEY_ADDREESS + " text," + KEY_PHONE + " integer," + KEY_COST + " float" + ")");
         db.execSQL("create table " + TABLE_PRODLIST + "(" + KEY_LISTID
                 + " integer primary key," + KEY_LISTORDID + " integer," + KEY_PRODUCTID + " integer," + KEY_QUANTITY + " integer" + ")");
 

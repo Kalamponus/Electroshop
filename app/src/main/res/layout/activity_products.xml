@@ -9,9 +9,32 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginTop="24dp"
         android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Наименование"
+            android:minHeight="48dp"></EditText>
+
+        <EditText
+            android:id="@+id/etPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Цена"
+            android:inputType="number"
+            tools:ignore="TouchTargetSizeCheck"></EditText>
+
+        <EditText
+            android:id="@+id/etDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Описание"
+            android:minHeight="48dp"></EditText>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,14 +44,19 @@
                 android:id="@+id/btnAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add"></Button>
+                android:text="Добавить"></Button>
 
             <Button
                 android:id="@+id/btnClear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear"></Button>
+                android:text="Очистить"></Button>
 
+            <Button
+                android:id="@+id/btnShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Магазин"></Button>
         </LinearLayout>
 
         <TableLayout

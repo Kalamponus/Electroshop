@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
@@ -17,16 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Shop extends AppCompatActivity implements View.OnClickListener{
+public class Shop extends AppCompatActivity implements View.OnClickListener, Parcelable {
 
     Button btnAdmin, btnOrder;
     DBHelper dbHelper;
     SQLiteDatabase database;
     int sum = 0;
-    int[][] prodInfo = new int[1][1];
+    ArrayList<List<Integer >> prodInfo = new ArrayList<List<Integer>>();
     TextView sumInCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,28 @@ public class Shop extends AppCompatActivity implements View.OnClickListener{
         UpdateTable();
 
     }
+
+    @Override
+    public int describeContents() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(prodInfo);
+    }
+    public static final Parcelable.Creator<Shop> CREATOR = new Parcelable.Creator<Shop>(){
+        @Override
+        public Shop createFromParcel(Parcel source) {
+            return new Shop();
+        }
+
+        @Override
+        public Shop[] newArray(int size) {
+            return new Shop[size];
+        }
+    };
     public void UpdateTable()
     {
         Cursor cursor = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
@@ -120,12 +145,11 @@ public class Shop extends AppCompatActivity implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.btnOrder:
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setText("Заказ на сумму " + sum + " составлен.");
-                toast.show();
+                Intent intentOrder = new Intent(this, OrderTaker.class);
+                intentOrder.putExtra("ProdInfo", prodInfo);
+                intentOrder.putExtra("Cost", sum);
                 ChangeSum(-sum);
+                startActivity(intentOrder);
                 break;
             default:
                 Cursor cursorUpdater = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
@@ -135,18 +159,20 @@ public class Shop extends AppCompatActivity implements View.OnClickListener{
                 ChangeSum(Integer.parseInt(priceKek));
                 int prodIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODID);
                 boolean found = false;
-                for (int[] arr : prodInfo) {
-                    for(int elem : arr){
-                        if(elem == prodIndex){
-                            arr[1] = arr[1]+1;
+                if(prodInfo.size() > 0){
+                    for(int i = 0; i < prodInfo.size()-1; i++){
+                        if(prodInfo.get(i).get(0) == prodIndex) {
+                            prodInfo.get(i).set(1, prodInfo.get(i).get(1)+1);
                             found = true;
                             break;
                         }
                     }
                 }
                 if(found == false){
-                    prodInfo[]
+                    prodInfo.get(prodInfo.size()-1).add(0, prodIndex);
+                    prodInfo.get(prodInfo.size()-1).add(1, prodIndex);
                 }
+
                 break;
         }
     }
