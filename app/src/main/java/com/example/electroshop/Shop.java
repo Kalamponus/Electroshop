@@ -1,11 +1,13 @@
 package com.example.electroshop;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -23,13 +25,12 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop extends AppCompatActivity implements View.OnClickListener, Parcelable {
+public class Shop extends AppCompatActivity implements View.OnClickListener{
 
     Button btnAdmin, btnOrder;
     DBHelper dbHelper;
     SQLiteDatabase database;
     int sum = 0;
-    ArrayList<List<Integer >> prodInfo = new ArrayList<List<Integer>>();
     TextView sumInCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +53,6 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Par
 
     }
 
-    @Override
-    public int describeContents() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(prodInfo);
-    }
-    public static final Parcelable.Creator<Shop> CREATOR = new Parcelable.Creator<Shop>(){
-        @Override
-        public Shop createFromParcel(Parcel source) {
-            return new Shop();
-        }
-
-        @Override
-        public Shop[] newArray(int size) {
-            return new Shop[size];
-        }
-    };
     public void UpdateTable()
     {
         Cursor cursor = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
@@ -112,7 +92,7 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Par
                 params.weight = 3.0f;
                 outputDescr.setLayoutParams(params);
                 outputDescr.setText(cursor.getString(descrIndex));
-                dbOutputRow.addView(outputPrice);
+                dbOutputRow.addView(outputDescr);
 
                 Button btnToCart = new Button(this);
                 btnToCart.setOnClickListener(this);
@@ -137,6 +117,7 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Par
         sum = sum + sumToAdd;
         sumInCart.setText("Сумма заказа: "  + sum);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -146,10 +127,9 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Par
                 break;
             case R.id.btnOrder:
                 Intent intentOrder = new Intent(this, OrderTaker.class);
-                intentOrder.putExtra("ProdInfo", prodInfo);
                 intentOrder.putExtra("Cost", sum);
-                ChangeSum(-sum);
                 startActivity(intentOrder);
+                ChangeSum(-sum);
                 break;
             default:
                 Cursor cursorUpdater = database.query(DBHelper.TABLE_PRODUCTS, null, null, null, null, null, null);
@@ -157,20 +137,23 @@ public class Shop extends AppCompatActivity implements View.OnClickListener, Par
                 int priceIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODPRICE);
                 String priceKek = cursorUpdater.getString(priceIndex);
                 ChangeSum(Integer.parseInt(priceKek));
-                int prodIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODID);
+
+                int columnIndex = cursorUpdater.getColumnIndex(DBHelper.KEY_PRODID);
+                int prodIndex = cursorUpdater.getInt(columnIndex);
                 boolean found = false;
-                if(prodInfo.size() > 0){
-                    for(int i = 0; i < prodInfo.size()-1; i++){
-                        if(prodInfo.get(i).get(0) == prodIndex) {
-                            prodInfo.get(i).set(1, prodInfo.get(i).get(1)+1);
-                            found = true;
-                            break;
-                        }
+                for(int i = 0; i < ProdInfoList.prodInfo.size(); i++){
+                    if(ProdInfoList.prodInfo.get(i).indx == prodIndex){
+                        ProdInfoList.prodInfo.get(i).quant+=1;
+                        found = true;
+                        break;
                     }
+
                 }
                 if(found == false){
-                    prodInfo.get(prodInfo.size()-1).add(0, prodIndex);
-                    prodInfo.get(prodInfo.size()-1).add(1, prodIndex);
+                    ProdInfo newProd = new ProdInfo();
+                    newProd.indx = prodIndex;
+                    newProd.quant = 1;
+                    ProdInfoList.prodInfo.add(newProd);
                 }
 
                 break;

@@ -38,11 +38,11 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_PRODUCTS + "(" + KEY_PRODID
-                + " integer primary key," + KEY_PRODNAME + " text," + KEY_PRODPRICE + " float," + KEY_PRODDESCR + " text" + ")");
+                + " integer primary key," + KEY_PRODNAME + " text," + KEY_PRODPRICE + " text," + KEY_PRODDESCR + " text" + ")");
         db.execSQL("create table " + TABLE_ORDERS + "(" + KEY_ORDERID
-                 + " text," + KEY_CUSTOMERNAME + " integer primary key," + KEY_ADDREESS + " text," + KEY_PHONE + " integer," + KEY_COST + " float" + ")");
+                 + " integer primary key," + KEY_CUSTOMERNAME + " text," + KEY_ADDREESS + " text," + KEY_PHONE + " text," + KEY_COST + " text" + ")");
         db.execSQL("create table " + TABLE_PRODLIST + "(" + KEY_LISTID
-                + " integer primary key," + KEY_LISTORDID + " integer," + KEY_PRODUCTID + " integer," + KEY_QUANTITY + " integer" + ")");
+                + " integer primary key," + KEY_LISTORDID + " text," + KEY_PRODUCTID + " text," + KEY_QUANTITY + " text" + ")");
 
     }
 

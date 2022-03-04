@@ -10,13 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Electroshop">
         <activity
-            android:name=".Shop"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Shop"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".OrderTaker"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".OrdersOutput"
+            android:exported="true">
         </activity>
     </application>
 
