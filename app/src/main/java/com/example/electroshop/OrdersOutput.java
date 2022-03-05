@@ -35,6 +35,34 @@ public class OrdersOutput extends AppCompatActivity implements View.OnClickListe
         UpdateTable();
     }
 
+    public String GetOrderGoods(String orderId)
+    {
+        String orderedGoodsList = "";
+        Cursor c = database.rawQuery("SELECT idListProd, quantity FROM productList WHERE idListOrder = " + orderId, null);
+        if (c.moveToFirst())
+        {
+            do
+            {
+                String goodId = c.getString(0);
+                String quantity = c.getString(1);
+                Cursor c2= database.rawQuery("SELECT prodName FROM products WHERE idProd = " + goodId, null);
+                if (c2.moveToFirst())
+                {
+                    do
+                    {
+                        String goodName = c2.getString(0);
+                        orderedGoodsList += goodName + " x " + quantity +";\n";
+                    }
+                    while(c2.moveToNext());
+                }
+                c2.close();
+            }
+            while(c.moveToNext());
+        }
+        c.close();
+        return orderedGoodsList;
+    }
+
     public void UpdateTable()
     {
         Cursor cursor = database.query(DBHelper.TABLE_ORDERS, null, null, null, null, null, null);
@@ -83,7 +111,12 @@ public class OrdersOutput extends AppCompatActivity implements View.OnClickListe
                 outputCost.setText(cursor.getString(costIndex));
                 dbOutputRow.addView(outputCost);
 
-
+                TextView outputProd = new TextView(this);
+                params.weight = 3.0f;
+                outputProd.setLayoutParams(params);
+                String id = cursor.getString(idIndex);
+                outputProd.setText(GetOrderGoods(id));
+                dbOutputRow.addView(outputProd);
 
                 dbOutput.addView(dbOutputRow);
             }

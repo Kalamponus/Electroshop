@@ -63,9 +63,9 @@ public class OrderTaker extends AppCompatActivity implements View.OnClickListene
                 contentValues = new ContentValues();
                 for(int i = 0; i < ProdInfoList.prodInfo.size(); i++){
                     contentValues.put(DBHelper.KEY_LISTORDID, Long.toString(ordId));
-                    contentValues.put(DBHelper.KEY_PRODID, Integer.toString(ProdInfoList.prodInfo.get(i).indx));
+                    contentValues.put(DBHelper.KEY_PRODUCTID, Integer.toString(ProdInfoList.prodInfo.get(i).indx));
                     contentValues.put(DBHelper.KEY_QUANTITY, Integer.toString(ProdInfoList.prodInfo.get(i).quant));
-                    database.insert(DBHelper.TABLE_PRODLIST, null, contentValues);
+                    long testId = database.insert(DBHelper.TABLE_PRODLIST, null, contentValues);
                     contentValues.clear();
                     }
                 Toast toast = new Toast(getApplicationContext());
